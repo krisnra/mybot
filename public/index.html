@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Percakapan Alarm</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      h2 {
+        color: #333;
+      }
+      .chat-box {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin-top: 10px;
+      }
+      .timestamp {
+        font-size: 12px;
+        color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Log Percakapan Alarm</h2>
+    <div id="chat-log"></div>
+
+    <script>
+      async function fetchChatLog() {
+        const response = await fetch("/chat-log");
+        const chatData = await response.json();
+        const chatLogDiv = document.getElementById("chat-log");
+
+        chatLogDiv.innerHTML = "";
+        chatData.forEach((chat) => {
+          const chatBox = document.createElement("div");
+          chatBox.classList.add("chat-box");
+          chatBox.innerHTML = `<strong>${chat.sender}:</strong> ${
+            chat.message
+          } <br>
+                                    <span class="timestamp">${new Date(
+                                      chat.timestamp
+                                    ).toLocaleString()}</span>`;
+          chatLogDiv.appendChild(chatBox);
+        });
+      }
+
+      // Ambil log setiap 5 detik
+      setInterval(fetchChatLog, 5000);
+      fetchChatLog();
+    </script>
+  </body>
+</html>
